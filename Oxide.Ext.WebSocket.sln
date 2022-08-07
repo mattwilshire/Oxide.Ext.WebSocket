@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32421.90
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Oxide.Ext.WebSocket", "Oxide.Ext.WebSocket\Oxide.Ext.WebSocket.csproj", "{1B343C52-FD34-4F1D-9B5B-9066A422BA72}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B343C52-FD34-4F1D-9B5B-9066A422BA72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B343C52-FD34-4F1D-9B5B-9066A422BA72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B343C52-FD34-4F1D-9B5B-9066A422BA72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B343C52-FD34-4F1D-9B5B-9066A422BA72}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0188CDF5-CF2B-43B2-852B-C0AB68E89348}
+	EndGlobalSection
+EndGlobal
