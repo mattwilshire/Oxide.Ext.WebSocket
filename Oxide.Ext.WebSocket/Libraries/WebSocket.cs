@@ -2,19 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using Oxide.Core;
 using Oxide.Core.Libraries;
+using Oxide.Core.Plugins;
 
 namespace Oxide.Ext.WebSocket.Libraries
 {
-    internal class WebSocket : Library
+    public class WebSocket : Library, IWebSocket
     {
         private Thread WorkerThread = null;
 
-        internal void Initialize()
+        void IWebSocket.Initialize()
         {
             if ((WorkerThread == null) || (!WorkerThread.IsAlive))
             {
@@ -28,30 +32,28 @@ namespace Oxide.Ext.WebSocket.Libraries
 
         private void Worker()
         {
-            TcpListener server = new TcpListener(IPAddress.Parse("127.0.0.1"), 1111);
+            TcpListener server = new TcpListener(IPAddress.Any, 1111);
             server.Start();
 
             while (true)
             {
-                Console.WriteLine(1);
-                Socket sock = server.AcceptSocket();
-                Console.WriteLine(2);
-                byte[] buffer = new byte[1024];
+                TcpClient sock = server.AcceptTcpClient();
+                NetworkStream stream = sock.GetStream();
 
                 string incomingMessage = "";
 
-                if (sock.Available < 1)
+                byte[] buffer = new byte[2048];
+                int bytes = -1;
+                do
                 {
-                    sock.Close();
-                    continue;
-                }
+                    bytes = stream.Read(buffer, 0, buffer.Length);
 
-                while (sock.Available > 0)
-                {
-                    Console.WriteLine(3);
-                    int gotBytes = sock.Receive(buffer);
-                    incomingMessage += Encoding.ASCII.GetString(buffer, 0, gotBytes);
-                }
+                    incomingMessage += Encoding.ASCII.GetString(buffer, 0, bytes);
+                    if (incomingMessage.IndexOf("<EOF>") != -1 || incomingMessage.Contains("\r\n\r\n"))
+                    {
+                        break;
+                    }
+                } while (bytes != 0);
 
                 if (incomingMessage != "")
                 {
@@ -61,14 +63,15 @@ namespace Oxide.Ext.WebSocket.Libraries
 
                 string response = "HTTP/1.1 200 OK\nServer: Apache / 2.2.14(Win32)\nContent - Length: 16\nContent - Type: text / html\nConnection: Closed\nContent-Type: text/html\n\n<html>Ok</html>";
                 byte[] outbuffer = Encoding.ASCII.GetBytes(response.ToString());
-                sock.Send(outbuffer);
+                stream.Write(outbuffer, 0, outbuffer.Length);
+                stream.Flush();
                 sock.Close();
             }
 
 
-           
+
         }
 
-        internal void Shutdown() => WorkerThread.Abort();
+        void IWebSocket.Shutdown() => WorkerThread.Abort();
     }
 }

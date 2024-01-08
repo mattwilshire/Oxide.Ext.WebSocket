@@ -1,5 +1,6 @@
 ﻿using Oxide.Core;
 using Oxide.Core.Extensions;
+using Oxide.Ext.WebSocket.Libraries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,12 @@ namespace Oxide.Ext.WebSocket
 {
     public class WebSocketExtension : Extension
     {
-        private Libraries.WebSocket WebSocket;
+        private IWebSocket WebSocket;
         public override string Name => "WebSocket";
         public override string Author => "mattwilshire";
         public override VersionNumber Version => new VersionNumber(1, 0, 0);
+
+        private bool SECURE = false;
 
         public WebSocketExtension(ExtensionManager manager) : base(manager)
         {
@@ -22,7 +25,15 @@ namespace Oxide.Ext.WebSocket
 
         public override void Load()
         {
-            Manager.RegisterLibrary("WebSocket", WebSocket = new Libraries.WebSocket());
+            if(SECURE)
+            {
+                Manager.RegisterLibrary("WebSocket", (Core.Libraries.Library)(WebSocket = new Libraries.WebSocketSecure()));
+            } 
+            else
+            {
+                Manager.RegisterLibrary("WebSocket", (Core.Libraries.Library)(WebSocket = new Libraries.WebSocket()));
+            }
+            
         }
 
         public override void LoadPluginWatchers(string plugindir)

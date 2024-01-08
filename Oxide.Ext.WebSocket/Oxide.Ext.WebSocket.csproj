@@ -44,7 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Libraries\IWebSocket.cs" />
     <Compile Include="Libraries\WebSocket.cs" />
+    <Compile Include="Libraries\WebSocketSecure.cs" />
     <Compile Include="WebSocketExtension.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
